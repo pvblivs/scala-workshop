@@ -22,10 +22,23 @@ object ClickMeApplication extends App {
         println("button clicked in a java way")
       }
     })
-    // to un-comment
-//    button.addActionListener { event: ActionEvent =>
-//      println("button clicked in a scala way")
-//    }
+
+    object MyImplicits {
+      import scala.language.implicitConversions
+
+      implicit def toListener(f: ActionEvent => Unit): ActionListener = new ActionListener {
+        def actionPerformed(event: ActionEvent) {
+          f(event)
+        }
+      }
+
+    }
+
+    import MyImplicits.toListener
+
+    button.addActionListener { event: ActionEvent =>
+      println("button clicked in a scala way")
+    }
 
     val panel = new JPanel()
     panel.add(button)
